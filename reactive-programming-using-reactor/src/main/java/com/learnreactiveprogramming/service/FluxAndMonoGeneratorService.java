@@ -18,11 +18,13 @@ public class FluxAndMonoGeneratorService {
     }
 
     public Mono<String> nameMono() {
-        return Mono.just("Owen");
+        return Mono.just("Owen")
+                .log();
     }
 
 
     public Flux<String> namesFlux() {
-        return Flux.fromIterable(List.of("Chris", "Steve", "Mark", "Bill"));
+        return Flux.fromIterable(List.of("Chris", "Steve", "Mark", "Bill"))
+                .log();
     }
 }
