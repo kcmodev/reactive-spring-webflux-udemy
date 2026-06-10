@@ -20,6 +20,10 @@ public class FluxAndMonoGeneratorService {
 
         fluxAndMonoGeneratorService.namesFluxLimited(2)
                 .log()
+                .subscribe(name -> System.out.println("(Flux) Name is: " + name)).dispose();
+
+        fluxAndMonoGeneratorService.namesFluxUpperCase()
+                .log()
                 .subscribe(name -> System.out.println("(Flux) Name is: " + name));
     }
 
@@ -29,6 +33,10 @@ public class FluxAndMonoGeneratorService {
 
     public Flux<String> namesFluxLimited(int limit) {
         return namesFlux().limitRequest(limit);
+    }
+
+    public Flux<String> namesFluxUpperCase() {
+        return namesFlux().map(String::toUpperCase);
     }
 
     public Mono<String> nameMono() {

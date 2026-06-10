@@ -33,4 +33,12 @@ class FluxAndMonoGeneratorServiceTest {
                 .expectNext("alex")
                 .verifyComplete();
     }
+
+    @Test
+    void namesFluxUpperCase() {
+        FluxAndMonoGeneratorService fluxAndMonoGeneratorService = new FluxAndMonoGeneratorService();
+        StepVerifier.create(fluxAndMonoGeneratorService.namesFluxUpperCase())
+                .expectNext("ALEX", "BEN", "CHLOE")
+                .verifyComplete();
+    }
 }
