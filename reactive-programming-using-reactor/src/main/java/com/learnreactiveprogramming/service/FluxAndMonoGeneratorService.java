@@ -17,10 +17,18 @@ public class FluxAndMonoGeneratorService {
         fluxAndMonoGeneratorService.nameMono()
                 .log()
                 .subscribe(name -> System.out.println("(Mono) Name is: " + name));
+
+        fluxAndMonoGeneratorService.namesFluxLimited(2)
+                .log()
+                .subscribe(name -> System.out.println("(Flux) Name is: " + name));
     }
 
     public Flux<String> namesFlux() {
         return Flux.fromIterable(List.of("alex", "ben", "chloe"));
+    }
+
+    public Flux<String> namesFluxLimited(int limit) {
+        return namesFlux().limitRequest(limit);
     }
 
     public Mono<String> nameMono() {

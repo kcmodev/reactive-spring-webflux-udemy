@@ -19,6 +19,14 @@ class FluxAndMonoGeneratorServiceTest {
     }
 
     @Test
+    void namesFluxLimitedTest() {
+        FluxAndMonoGeneratorService fluxAndMonoGeneratorService = new FluxAndMonoGeneratorService();
+        StepVerifier.create(fluxAndMonoGeneratorService.namesFluxLimited(2))
+                .expectNext("alex", "ben")
+                .verifyComplete();
+    }
+
+    @Test
     void nameMonoTest() {
         FluxAndMonoGeneratorService fluxAndMonoGeneratorService = new FluxAndMonoGeneratorService();
         StepVerifier.create(fluxAndMonoGeneratorService.nameMono())
