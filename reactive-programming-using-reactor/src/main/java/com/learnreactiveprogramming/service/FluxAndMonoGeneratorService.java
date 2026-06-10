@@ -11,9 +11,11 @@ public class FluxAndMonoGeneratorService {
         FluxAndMonoGeneratorService fluxAndMonoGeneratorService = new FluxAndMonoGeneratorService();
 
         fluxAndMonoGeneratorService.namesFlux()
+                .log()
                 .subscribe(name -> System.out.println("(Flux) Name is: " + name));
 
         fluxAndMonoGeneratorService.nameMono()
+                .log()
                 .subscribe(name -> System.out.println("(Mono) Name is: " + name));
     }
 
