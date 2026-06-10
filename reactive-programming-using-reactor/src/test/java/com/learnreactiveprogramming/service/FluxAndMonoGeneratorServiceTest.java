@@ -41,4 +41,14 @@ class FluxAndMonoGeneratorServiceTest {
                 .expectNext("ALEX", "BEN", "CHLOE")
                 .verifyComplete();
     }
+
+    @Test
+    void splitStringWithDelay() {
+        FluxAndMonoGeneratorService fluxAndMonoGeneratorService = new FluxAndMonoGeneratorService();
+        var names = fluxAndMonoGeneratorService.splitStringAsync(3);
+
+        StepVerifier.create(names)
+                .expectNextCount(9)
+                .verifyComplete();
+    }
 }
