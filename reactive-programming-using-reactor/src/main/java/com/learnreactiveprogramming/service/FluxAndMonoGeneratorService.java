@@ -28,7 +28,7 @@ public class FluxAndMonoGeneratorService {
         fluxAndMonoGeneratorService.namesFluxFlatMap(3)
                 .subscribe(name -> System.out.println("(Flux) Name is: " + name));
 
-        fluxAndMonoGeneratorService.splitStringAsyncConcatMap(3)
+        fluxAndMonoGeneratorService.namesFluxAsyncConcatMap(3)
                 .subscribe(name -> System.out.println("(Flux) Name is: " + name));
     }
 
@@ -64,7 +64,7 @@ public class FluxAndMonoGeneratorService {
                 .log();
     }
 
-    public Flux<String> splitStringAsyncConcatMap(int stringLength) {
+    public Flux<String> namesFluxAsyncConcatMap(int stringLength) {
         return Flux.fromIterable(List.of("alex", "ben", "chloe"))
                 .map(String::toUpperCase)
                 .filter(s -> s.length() > stringLength)
@@ -89,6 +89,23 @@ public class FluxAndMonoGeneratorService {
         return Flux.fromIterable(List.of("alex", "ben", "chloe"))
                 .transform(filterMap)
                 .flatMap(this::splitString)
+                .defaultIfEmpty("No name found")
+                .log();
+    }
+
+    public Flux<String> namesFluxSwitchIfEmpty(int stringLength) {
+
+        Function<Flux<String>, Flux<String>> filterMap = name -> name
+                .filter(s -> s.length() > stringLength)
+                .map(String::toUpperCase)
+                .flatMap(this::splitString);
+
+        var defaultFlux = Flux.just("default")
+                .transform(filterMap);
+
+        return Flux.fromIterable(List.of("alex", "ben", "chloe"))
+                .transform(filterMap)
+                .switchIfEmpty(defaultFlux)
                 .log();
     }
 
