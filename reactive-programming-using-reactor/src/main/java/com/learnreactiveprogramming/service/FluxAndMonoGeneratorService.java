@@ -6,6 +6,7 @@ import reactor.core.publisher.Mono;
 import java.time.Duration;
 import java.util.List;
 import java.util.Random;
+import java.util.function.Function;
 
 public class FluxAndMonoGeneratorService {
 
@@ -24,7 +25,7 @@ public class FluxAndMonoGeneratorService {
         fluxAndMonoGeneratorService.namesFluxUpperCase()
                 .subscribe(name -> System.out.println("(Flux) Name is: " + name));
 
-        fluxAndMonoGeneratorService.splitStringAsync(3)
+        fluxAndMonoGeneratorService.namesFluxFlatMap(3)
                 .subscribe(name -> System.out.println("(Flux) Name is: " + name));
 
         fluxAndMonoGeneratorService.splitStringAsyncConcatMap(3)
@@ -47,7 +48,15 @@ public class FluxAndMonoGeneratorService {
                 .log();
     }
 
-    public Flux<String> splitStringAsync(int stringLength) {
+    public Flux<String> namesFluxSplitStringFlatMap(int stringLength) {
+        return namesFlux()
+                .map(String::toUpperCase)
+                .filter(s -> s.length() > stringLength)
+                .flatMap(this::splitString)
+                .log();
+    }
+
+    public Flux<String> namesFluxFlatMap(int stringLength) {
         return Flux.fromIterable(List.of("alex", "ben", "chloe"))
                 .map(String::toUpperCase)
                 .filter(s -> s.length() > stringLength)
@@ -60,6 +69,32 @@ public class FluxAndMonoGeneratorService {
                 .map(String::toUpperCase)
                 .filter(s -> s.length() > stringLength)
                 .concatMap(this::splitStringWithDelay)
+                .log();
+    }
+
+    public Flux<String> namesMonoFlatMapMany(int stringLength) {
+        return Mono.just("alex")
+                .map(String::toUpperCase)
+                .filter(s -> s.length() > stringLength)
+                .flatMapMany(this::splitString)// returns flux instead of mono
+                .log();
+    }
+
+    public Flux<String> namesFluxTransform(int stringLength) {
+
+        Function<Flux<String>, Flux<String>> filterMap = name -> name
+                .filter(s -> s.length() > stringLength)
+                .map(String::toUpperCase);
+
+        return Flux.fromIterable(List.of("alex", "ben", "chloe"))
+                .transform(filterMap)
+                .flatMap(this::splitString)
+                .log();
+    }
+
+    public Flux<String> splitString(String name) {
+        return Flux.fromArray(name.split(""))
+                .map(String::toUpperCase)
                 .log();
     }
 

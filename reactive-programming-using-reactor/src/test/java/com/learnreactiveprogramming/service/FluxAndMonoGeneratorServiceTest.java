@@ -45,7 +45,7 @@ class FluxAndMonoGeneratorServiceTest {
     @Test
     void splitStringWithDelay() {
         FluxAndMonoGeneratorService fluxAndMonoGeneratorService = new FluxAndMonoGeneratorService();
-        var names = fluxAndMonoGeneratorService.splitStringAsync(3);
+        var names = fluxAndMonoGeneratorService.namesFluxFlatMap(3);
 
         StepVerifier.create(names)
                 .expectNextCount(9)
@@ -56,6 +56,36 @@ class FluxAndMonoGeneratorServiceTest {
     void splitStringAsyncConcatMap() {
         FluxAndMonoGeneratorService fluxAndMonoGeneratorService = new FluxAndMonoGeneratorService();
         var names = fluxAndMonoGeneratorService.splitStringAsyncConcatMap(3);
+
+        StepVerifier.create(names)
+                .expectNext("A", "L", "E", "X", "C", "H", "L", "O", "E")
+                .verifyComplete();
+    }
+
+    @Test
+    void namesMonoFlatMapMany() {
+        FluxAndMonoGeneratorService fluxAndMonoGeneratorService = new FluxAndMonoGeneratorService();
+        var names = fluxAndMonoGeneratorService.namesMonoFlatMapMany(3);
+
+        StepVerifier.create(names)
+                .expectNext("A", "L", "E", "X")
+                .verifyComplete();
+    }
+
+    @Test
+    void namesFluxSplitStringFlatMap() {
+        FluxAndMonoGeneratorService fluxAndMonoGeneratorService = new FluxAndMonoGeneratorService();
+        var names = fluxAndMonoGeneratorService.namesFluxSplitStringFlatMap(3);
+
+        StepVerifier.create(names)
+                .expectNext("A", "L", "E", "X", "C", "H", "L", "O", "E")
+                .verifyComplete();
+    }
+
+    @Test
+    void namesFluxTransform() {
+        FluxAndMonoGeneratorService fluxAndMonoGeneratorService = new FluxAndMonoGeneratorService();
+        var names = fluxAndMonoGeneratorService.namesFluxTransform(3);
 
         StepVerifier.create(names)
                 .expectNext("A", "L", "E", "X", "C", "H", "L", "O", "E")
