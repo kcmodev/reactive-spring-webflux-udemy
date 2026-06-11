@@ -51,4 +51,14 @@ class FluxAndMonoGeneratorServiceTest {
                 .expectNextCount(9)
                 .verifyComplete();
     }
+
+    @Test
+    void splitStringAsyncConcatMap() {
+        FluxAndMonoGeneratorService fluxAndMonoGeneratorService = new FluxAndMonoGeneratorService();
+        var names = fluxAndMonoGeneratorService.splitStringAsyncConcatMap(3);
+
+        StepVerifier.create(names)
+                .expectNext("A", "L", "E", "X", "C", "H", "L", "O", "E")
+                .verifyComplete();
+    }
 }

@@ -13,35 +13,38 @@ public class FluxAndMonoGeneratorService {
         FluxAndMonoGeneratorService fluxAndMonoGeneratorService = new FluxAndMonoGeneratorService();
 
         fluxAndMonoGeneratorService.namesFlux()
-                .log()
                 .subscribe(name -> System.out.println("(Flux) Name is: " + name));
 
         fluxAndMonoGeneratorService.nameMono()
-                .log()
                 .subscribe(name -> System.out.println("(Mono) Name is: " + name));
 
         fluxAndMonoGeneratorService.namesFluxLimited(2)
-                .log()
                 .subscribe(name -> System.out.println("(Flux) Name is: " + name)).dispose();
 
         fluxAndMonoGeneratorService.namesFluxUpperCase()
-                .log()
                 .subscribe(name -> System.out.println("(Flux) Name is: " + name));
 
         fluxAndMonoGeneratorService.splitStringAsync(3)
                 .subscribe(name -> System.out.println("(Flux) Name is: " + name));
+
+        fluxAndMonoGeneratorService.splitStringAsyncConcatMap(3)
+                .subscribe(name -> System.out.println("(Flux) Name is: " + name));
     }
 
     public Flux<String> namesFlux() {
-        return Flux.fromIterable(List.of("alex", "ben", "chloe"));
+        return Flux.fromIterable(List.of("alex", "ben", "chloe")).log();
     }
 
     public Flux<String> namesFluxLimited(int limit) {
-        return namesFlux().limitRequest(limit);
+        return namesFlux()
+                .limitRequest(limit)
+                .log();
     }
 
     public Flux<String> namesFluxUpperCase() {
-        return namesFlux().map(String::toUpperCase);
+        return namesFlux()
+                .map(String::toUpperCase)
+                .log();
     }
 
     public Flux<String> splitStringAsync(int stringLength) {
@@ -52,11 +55,19 @@ public class FluxAndMonoGeneratorService {
                 .log();
     }
 
+    public Flux<String> splitStringAsyncConcatMap(int stringLength) {
+        return Flux.fromIterable(List.of("alex", "ben", "chloe"))
+                .map(String::toUpperCase)
+                .filter(s -> s.length() > stringLength)
+                .concatMap(this::splitStringWithDelay)
+                .log();
+    }
+
     public Flux<String> splitStringWithDelay(String name) {
         return Flux.fromArray(name.split(""))
                 .delayElements(Duration.ofMillis(new Random().nextInt(1000)))
-                .doOnNext(s -> System.out.println("Value received: " + s))
-                .map(String::toUpperCase);
+                .map(String::toUpperCase)
+                .log();
     }
 
     public Mono<String> nameMono() {
