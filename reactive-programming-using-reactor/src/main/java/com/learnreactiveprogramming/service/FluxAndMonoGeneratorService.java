@@ -21,15 +21,64 @@ public class FluxAndMonoGeneratorService {
 
         fluxAndMonoGeneratorService.namesFluxLimited(2)
                 .subscribe(name -> System.out.println("(Flux) Name is: " + name)).dispose();
+    }
 
-        fluxAndMonoGeneratorService.namesFluxUpperCase()
-                .subscribe(name -> System.out.println("(Flux) Name is: " + name));
+    public Flux<String> concatStreams() {
+        var namesFlux = Flux.just("alex", "ben", "chloe");
+        var defFlux = Flux.just("D", "E", "F");
+        return Flux.concat(namesFlux, defFlux).log();
+    }
 
-        fluxAndMonoGeneratorService.namesFluxFlatMap(3)
-                .subscribe(name -> System.out.println("(Flux) Name is: " + name));
+    public Flux<String> concatWithStreams() {
+        var aMono = Mono.just("A");
+        var bMono = Mono.just("B");
+        return aMono.concatWith(bMono).log();
+    }
 
-        fluxAndMonoGeneratorService.namesFluxAsyncConcatMap(3)
-                .subscribe(name -> System.out.println("(Flux) Name is: " + name));
+    public Flux<String> mergeStreams() {
+        var namesFlux = Flux.just("alex", "ben", "chloe").delayElements(Duration.ofMillis(100));
+        var defFlux = Flux.just("D", "E", "F").delayElements(Duration.ofMillis(125));
+        return Flux.merge(namesFlux, defFlux).log();
+    }
+
+    public Flux<String> mergeWithStream() {
+        var namesFlux = Flux.just("alex", "ben", "chloe").delayElements(Duration.ofMillis(100));
+        var defFlux = Flux.just("D", "E", "F").delayElements(Duration.ofMillis(125));
+        return namesFlux.mergeWith(defFlux).log();
+    }
+
+    public Flux<String> mergeMonoWithFlux() {
+        var aMono = Mono.just("A");
+        var bMono = Mono.just("B");
+        return aMono.mergeWith(bMono).log();
+    }
+
+    public Flux<String> mergeSequentialStreams() {
+        var abcFlux = Flux.just("A", "B", "C");
+        var defFlux = Flux.just("D", "E", "F");
+        return Flux.mergeSequential(abcFlux, defFlux).log();
+    }
+
+    public Flux<String> zipStream() {
+        var abcFlux = Flux.just("A", "B", "C");
+        var defFlux = Flux.just("D", "E", "F");
+        return Flux.zip(abcFlux, defFlux, (first, second) -> first + second).log();
+    }
+
+    public Flux<String> zipMap() {
+        var abcFlux = Flux.just("A", "B", "C");
+        var defFlux = Flux.just("D", "E", "F");
+        var flux123 = Flux.just(1, 2, 3);
+        var flux456 = Flux.just(4, 5, 6);
+        return Flux.zip(abcFlux, defFlux, flux123, flux456)
+                .map(t4 -> t4.getT1() + t4.getT2() + t4.getT3() + t4.getT4())
+                .log();
+    }
+
+    public Flux<String> zipWith() {
+        var abcFlux = Flux.just("A", "B", "C");
+        var defFlux = Flux.just("D", "E", "F");
+        return abcFlux.zipWith(defFlux, (first, second) -> first + second).log();
     }
 
     public Flux<String> namesFlux() {

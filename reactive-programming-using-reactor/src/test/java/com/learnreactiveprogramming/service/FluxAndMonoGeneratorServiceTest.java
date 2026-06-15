@@ -111,4 +111,95 @@ class FluxAndMonoGeneratorServiceTest {
                 .expectNext("D", "E", "F", "A", "U", "L", "T")
                 .verifyComplete();
     }
+
+    @Test
+    void concatStreams() {
+        FluxAndMonoGeneratorService fluxAndMonoGeneratorService = new FluxAndMonoGeneratorService();
+        var names = fluxAndMonoGeneratorService.concatStreams();
+
+        StepVerifier.create(names)
+                .expectNext("alex", "ben", "chloe", "D", "E", "F")
+                .verifyComplete();
+    }
+
+    @Test
+    void concatWithStreams() {
+        FluxAndMonoGeneratorService fluxAndMonoGeneratorService = new FluxAndMonoGeneratorService();
+        var names = fluxAndMonoGeneratorService.concatWithStreams();
+
+        StepVerifier.create(names)
+                .expectNext("A", "B")
+                .verifyComplete();
+    }
+
+    @Test
+    void mergeStreams() {
+        FluxAndMonoGeneratorService fluxAndMonoGeneratorService = new FluxAndMonoGeneratorService();
+        var names = fluxAndMonoGeneratorService.mergeStreams();
+
+        StepVerifier.create(names)
+                .expectNext("alex", "D", "ben", "E", "chloe", "F")
+                .verifyComplete();
+    }
+
+    @Test
+    void mergeWithStream() {
+        FluxAndMonoGeneratorService fluxAndMonoGeneratorService = new FluxAndMonoGeneratorService();
+        var names = fluxAndMonoGeneratorService.mergeWithStream();
+
+        StepVerifier.create(names)
+                .expectNext("alex", "D", "ben", "E", "chloe", "F")
+                .verifyComplete();
+    }
+
+    @Test
+    void mergeMonoWithFlux() {
+        FluxAndMonoGeneratorService fluxAndMonoGeneratorService = new FluxAndMonoGeneratorService();
+        var names = fluxAndMonoGeneratorService.mergeMonoWithFlux();
+
+        StepVerifier.create(names)
+                .expectNext("A", "B")
+                .verifyComplete();
+    }
+
+    @Test
+    void mergeSequentialStreams() {
+        FluxAndMonoGeneratorService fluxAndMonoGeneratorService = new FluxAndMonoGeneratorService();
+        var names = fluxAndMonoGeneratorService.mergeSequentialStreams();
+
+        StepVerifier.create(names)
+                .expectNext("A", "B", "C", "D", "E", "F")
+                .verifyComplete();
+    }
+
+    @Test
+    void zipStream() {
+        FluxAndMonoGeneratorService fluxAndMonoGeneratorService = new FluxAndMonoGeneratorService();
+        var names = fluxAndMonoGeneratorService.zipStream();
+
+        StepVerifier.create(names)
+                .expectNext("AD", "BE", "CF")
+                .verifyComplete();
+    }
+
+    @Test
+    void zipMap() {
+        FluxAndMonoGeneratorService fluxAndMonoGeneratorService = new FluxAndMonoGeneratorService();
+        var names = fluxAndMonoGeneratorService.zipMap();
+
+        StepVerifier.create(names)
+                .expectNext("AD14", "BE25", "CF36")
+                .verifyComplete();
+    }
+
+    @Test
+    void zipMapWith() {
+        FluxAndMonoGeneratorService fluxAndMonoGeneratorService = new FluxAndMonoGeneratorService();
+        var names = fluxAndMonoGeneratorService.zipWith();
+
+        StepVerifier.create(names)
+                .expectNext("AD", "BE", "CF")
+                .verifyComplete();
+    }
+
 }
