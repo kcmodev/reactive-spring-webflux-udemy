@@ -1,4 +1,4 @@
-package org.reactivespring.movieinfoservice;
+package com.reactivespring.movieinfoservice;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
